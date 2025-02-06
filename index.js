@@ -1,15 +1,28 @@
-const express = require('express');
-const { resolve } = require('path');
+require("dotenv").config(); // Load environment variables
+const express = require("express");
+const mongoose = require("mongoose");
 
 const app = express();
-const port = 3010;
+const PORT = process.env.PORT || 6969;
+const MONGO_URL = process.env.MONGO_URL;
 
-app.use(express.static('static'));
-
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
+// Connect to MongoDB
+mongoose
+.connect(MONGO_URL)
+.then(() => {
+  console.log("🔥🔥Connected to database🔥🔥");
+})
+.catch((error) => {
+  console.error("Error connecting to database:", error.message);
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+// Middleware
+app.use(express.json());
+
+app.get("/", (req, res) => {
+res.send("Express server is running");
+});
+
+app.listen(PORT, () => {
+console.log(`Server running on port ${PORT}`);
 });
